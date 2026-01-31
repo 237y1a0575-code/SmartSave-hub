@@ -139,15 +139,24 @@ function payUPI(index, amount) {
 // Custom UPI payment (reads from input field)
 function payCustomUPI(index) {
   const input = document.getElementById(`input-amount-${index}`);
-  let amount = 100; // Default if empty
 
-  if (input && input.value) {
-    const val = parseInt(input.value);
-    if (val > 0) amount = val;
+  // Check if input has a value
+  if (!input || !input.value || input.value.trim() === '') {
+    showToast("Please enter an amount first!");
+    if (input) input.focus();
+    return;
   }
 
-  openUpiModal(index, amount);
+  const val = parseInt(input.value);
+  if (!val || val <= 0) {
+    showToast("Please enter a valid amount greater than 0.");
+    return;
+  }
+
+  // Open UPI modal with the entered amount
+  openUpiModal(index, val);
 }
+
 
 // Custom amount save button
 function addCustomMoney(index) {
