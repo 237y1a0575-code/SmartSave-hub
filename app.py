@@ -379,7 +379,7 @@ if __name__ == "__main__":
         # Get the local IP address to show the user
         hostname = socket.gethostname()
         local_ip = socket.gethostbyname(hostname)
-        print(f"\n -> 📲 Access this app on your mobile/tablet at: http://{local_ip}:5000\n")
+        print(f"\n -> 📲 Access this app at: https://smart-save-hub.vercel.app\n")
     except Exception:
         print("\n -> ⚠️  Could not detect local IP. Run 'ipconfig' to find it.\n")
 
