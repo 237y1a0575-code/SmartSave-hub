@@ -124,11 +124,104 @@ function closeConfirmModal() {
   if (modal) modal.style.display = 'none';
 }
 
+// ============= PAYMENT FLOW ENGINE =============
+
+function startPaymentProcess(index, amount) {
+  // Show overlay
+  const overlay = document.getElementById('payment-overlay');
+  const processing = document.getElementById('payment-processing');
+  const success = document.getElementById('payment-success');
+
+  if (overlay) {
+    overlay.style.display = 'flex';
+    overlay.style.opacity = '0';
+    overlay.style.animation = 'fadeIn 0.3s forwards';
+  }
+  if (processing) processing.style.display = 'block';
+  if (success) success.style.display = 'none';
+
+  // Simulate Banking Network Delay (1.5s - 2.5s)
+  const delay = 1500 + Math.random() * 1000;
+
+  setTimeout(() => {
+    executeTransaction(index, amount);
+  }, delay);
+}
+
+function executeTransaction(index, amount) {
+  fetch(`/add-money/${index}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ amount: parseInt(amount) })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        showPaymentSuccess(index, amount, data);
+      } else {
+        closePaymentOverlay();
+        showToast("Transaction Failed: " + (data.error || "Unknown Error"));
+      }
+    })
+    .catch(err => {
+      closePaymentOverlay();
+      showToast("Network Error. Please try again.");
+    });
+}
+
+function showPaymentSuccess(index, amount, data) {
+  const processing = document.getElementById('payment-processing');
+  const success = document.getElementById('payment-success');
+
+  if (processing) processing.style.display = 'none';
+  if (success) success.style.display = 'block';
+
+  // Update Receipt Details
+  const amountElem = document.getElementById('success-amount');
+  if (amountElem) amountElem.innerText = `₹${amount}`;
+
+  const txnIdElem = document.getElementById('txn-id');
+  if (txnIdElem) txnIdElem.innerText = 'UPI' + Math.floor(10000000 + Math.random() * 90000000); // 8 digit simulated ID
+
+  const dateElem = document.getElementById('txn-date');
+  if (dateElem) {
+    const now = new Date();
+    dateElem.innerText = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}, Today`;
+  }
+
+  // Update UI in background
+  updateGoalCard(index, data);
+
+  // Formatting for completion
+  if (data.is_completed) {
+    if (typeof confetti !== 'undefined') {
+      confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 }, zIndex: 4000 });
+    }
+    // Save completion state for reload
+    localStorage.setItem('just_completed', data.name);
+  }
+}
+
+function closePaymentOverlay() {
+  const overlay = document.getElementById('payment-overlay');
+  if (overlay) {
+    overlay.style.animation = 'fadeOut 0.3s forwards';
+    setTimeout(() => {
+      overlay.style.display = 'none';
+
+      // If a goal was just completed, reload now to show full state
+      if (localStorage.getItem('just_completed')) {
+        location.reload();
+      }
+    }, 300);
+  }
+}
+
 // ============= MAIN ACTION FUNCTIONS =============
 
 // Quick add buttons (+₹10, +₹50)
 function addMoney(index, amount) {
-  addMoneyToGoal(index, amount);
+  startPaymentProcess(index, amount);
 }
 
 // Pay UPI button (uses selected amount)
@@ -177,38 +270,9 @@ function addCustomMoney(index) {
 
 // ============= API HANDLER =============
 function addMoneyToGoal(index, amount) {
-  fetch(`/add-money/${index}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ amount: parseInt(amount) })
-  })
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        // Update the UI
-        updateGoalCard(index, data);
-
-        // Show success toast
-        showToast(`Saved ₹${amount}! ${data.nudge}`);
-
-        // If goal completed, celebrate!
-        if (data.is_completed) {
-          if (typeof confetti !== 'undefined') {
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-          }
-          setTimeout(() => {
-            localStorage.setItem('just_completed', data.name);
-            location.reload();
-          }, 1000);
-        }
-      } else {
-        showToast("Failed to add money. Please try again.");
-      }
-    })
-    .catch(err => {
-      console.error("Error adding money:", err);
-      showToast("Network error. Please try again.");
-    });
+  // Deprecated: routed to startPaymentProcess for direct calls, 
+  // but kept if called directly by legacy code (though we updated callers below)
+  startPaymentProcess(index, amount);
 }
 
 function updateGoalCard(index, data) {

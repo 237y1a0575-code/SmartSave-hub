@@ -314,6 +314,50 @@
         </div>
     </div>
 
+    <!-- Payment Processing / Success Overlay -->
+    <div id="payment-overlay" class="modal-overlay" style="z-index: 3000;">
+        <div class="modal-content" style="text-align: center; max-width: 320px;">
+            <!-- Processing State -->
+            <div id="payment-processing">
+                <div class="loader-spinner"></div>
+                <h3 style="margin-top: 1rem;">Processing Payment...</h3>
+                <p style="font-size: 0.8rem; margin-top: 0.5rem; color: var(--text-muted);">Securely connecting to
+                    Bank...</p>
+            </div>
+
+            <!-- Success State -->
+            <div id="payment-success" style="display: none;">
+                <div class="success-icon-anim">
+                    <svg viewBox="0 0 24 24" class="check-svg">
+                        <path fill="none" d="M4.1 12.7L9 17.6 20.3 6.3" stroke="#fff" stroke-width="3"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </div>
+                <h2 style="margin: 1rem 0 0.5rem;">Payment Successful!</h2>
+                <div style="font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin-bottom: 1rem;"
+                    id="success-amount">₹0</div>
+
+                <div class="receipt-box">
+                    <div class="receipt-row">
+                        <span>Txn ID:</span>
+                        <span id="txn-id" style="font-family: monospace;">-</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span>Date:</span>
+                        <span id="txn-date">-</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span>Status:</span>
+                        <span style="color: var(--success); font-weight: 700;">Completed</span>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="closePaymentOverlay()"
+                    style="width: 100%; margin-top: 1.5rem;">Done</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Container -->
     <div class="toast-container"
         style="position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 2000; display: flex; flex-direction: column; gap: 10px; pointer-events: none;">
