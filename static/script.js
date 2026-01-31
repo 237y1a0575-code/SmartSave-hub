@@ -129,10 +129,26 @@ function closeUpiModal() {
   if (modal) modal.style.display = "none";
 }
 
+function payCustomUPI(index) {
+  const input = document.getElementById(`custom-amount-${index}`);
+  let amount = 100; // Default fallback if empty
+
+  if (input && input.value) {
+    const val = parseInt(input.value);
+    if (val > 0) amount = val;
+  }
+
+  openUpiModal(index, amount);
+}
+
 function confirmUpiPayment() {
   if (currentUpiGoalIndex !== null && currentUpiAmount !== null) {
     addMoneyApi(currentUpiGoalIndex, currentUpiAmount);
     closeUpiModal();
+
+    // Clear custom input if it was used
+    const input = document.getElementById(`custom-amount-${currentUpiGoalIndex}`);
+    if (input) input.value = '';
   }
 }
 
