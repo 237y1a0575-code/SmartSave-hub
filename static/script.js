@@ -89,24 +89,24 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// QR CODE GENERATOR (Simulated)
-function generateQRCode() {
-  const qrContainer = document.getElementById('qrCode');
-  if (!qrContainer) return;
+// QR CODE GENERATOR (Real UPI Format)
+function generateRealUPIQR(amount) {
+  const canvas = document.getElementById('qrCodeCanvas');
+  if (!canvas) return;
 
-  qrContainer.innerHTML = ''; // Clear existing
+  const upiUri = `upi://pay?pa=loki1@okaxis&pn=SmartSaveHub&am=${amount}&cu=INR`;
 
-  // Generate random QR-like pattern (12x12 grid)
-  for (let i = 0; i < 144; i++) {
-    const dot = document.createElement('div');
-    dot.className = 'qr-dot';
-    // Random pattern for visual effect
-    if (Math.random() > 0.5) {
-      dot.style.background = 'white';
-    } else {
-      dot.style.background = 'black';
-    }
-    qrContainer.appendChild(dot);
+  // Use QRious to render
+  // Default to simulation if lib not loaded (though we added it)
+  if (typeof QRious !== 'undefined') {
+    new QRious({
+      element: canvas,
+      value: upiUri,
+      size: 200,
+      level: 'H'
+    });
+  } else {
+    console.warn("QRious lib not found, skipping QR render");
   }
 }
 
@@ -115,16 +115,25 @@ function openUpiModal(index, amount) {
   currentUpiAmount = amount;
   const amountElem = document.getElementById("upiAmount");
   if (amountElem) amountElem.innerText = `₹${amount}`;
+
   const modal = document.getElementById("upiModal");
   if (modal) {
     modal.style.display = "flex";
-    setTimeout(generateQRCode, 100); // Generate QR after modal appears
+    // Generate QR immediately
+    setTimeout(() => generateRealUPIQR(amount), 50);
   }
 }
 
 function closeUpiModal() {
   const modal = document.getElementById("upiModal");
   if (modal) modal.style.display = "none";
+}
+
+function confirmUpiPayment() {
+  if (currentUpiGoalIndex !== null && currentUpiAmount !== null) {
+    addMoneyApi(currentUpiGoalIndex, currentUpiAmount);
+    closeUpiModal();
+  }
 }
 
 // TRANSACTION HISTORY
