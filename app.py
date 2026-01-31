@@ -264,5 +264,13 @@ def add_money(index):
     )
 
 if __name__ == "__main__":
+    try:
+        import socket
+        hostname = socket.gethostname()
+        local_ip = socket.gethostbyname(hostname)
+        print(f"\n -> 📲 Access this app at: http://127.0.0.1:5000\n")
+    except:
+        pass
+
     port = int(os.environ.get("PORT", 5000))
     app.run(debug=True, host="0.0.0.0", port=port)
