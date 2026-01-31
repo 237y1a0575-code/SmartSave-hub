@@ -382,3 +382,14 @@ window.addEventListener('DOMContentLoaded', () => {
     localStorage.removeItem('pendingToast');
   }
 });
+
+function shareApp() {
+  const url = 'https://smart-save-hub.vercel.app'; // Hardcoded for better sharing experience
+  navigator.clipboard.writeText(url).then(() => {
+    showToast('Project Link copied! Ready to share. ');
+  }).catch(() => {
+    // Fallback
+    showToast('Could not copy automatically. URL: ' + url);
+  });
+}
+
