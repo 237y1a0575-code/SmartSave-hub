@@ -1,1 +1,22 @@
-[]
+[
+    {
+        "name": "education",
+        "target": 200000,
+        "saved": 1050,
+        "deadline": "2027-08-10",
+        "icon": "\ud83c\udf93",
+        "history": [
+            {
+                "amount": 1000,
+                "date": "31 Jan",
+                "time": "17:10"
+            },
+            {
+                "amount": 50,
+                "date": "31 Jan",
+                "time": "17:09"
+            }
+        ],
+        "last_transaction": null
+    }
+]

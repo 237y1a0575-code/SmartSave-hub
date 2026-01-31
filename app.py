@@ -268,7 +268,8 @@ if __name__ == "__main__":
         import socket
         hostname = socket.gethostname()
         local_ip = socket.gethostbyname(hostname)
-        print(f"\n -> 📲 Access this app at: http://127.0.0.1:5000\n")
+        print(f"\n -> 📲 Local Access: http://127.0.0.1:5000")
+        print(f" -> ☁️ Cloud Access: https://smart-save-hub.vercel.app\n")
     except:
         pass
 
