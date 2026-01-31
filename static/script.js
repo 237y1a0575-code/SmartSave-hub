@@ -138,6 +138,7 @@ function payCustomUPI(index) {
     if (val > 0) amount = val;
   }
 
+  console.log("UPI Payment Request:", { index, amount, inputV: input ? input.value : 'null' });
   openUpiModal(index, amount);
 }
 

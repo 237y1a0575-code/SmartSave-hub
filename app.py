@@ -312,10 +312,6 @@ def goal_page():
 
 @app.route("/add-money/<int:index>", methods=["POST"])
 def add_money(index):
-    # 9. Payment Failure Simulation (10% chance)
-    if random.random() < 0.1:
-         return jsonify(success=False, error="Payment failed. Please try again. 🛑"), 400
-
     if index < 0 or index >= len(goals):
         return jsonify(success=False, error="Invalid goal index"), 400
     
