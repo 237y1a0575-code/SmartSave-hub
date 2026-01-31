@@ -31,17 +31,38 @@ google = oauth.register(
     server_metadata_url='https://accounts.google.com/.well-known/openid-configuration'
 )
 
-DATA_FILE = "goals.json"
+import shutil
+
+# Vercel filesystem is read-only except for /tmp
+# We must use /tmp to save data
+DATA_FILE = os.path.join("/tmp", "goals.json")
+INITIAL_FILE = "goals.json"
 
 def load_goals():
-    if os.path.exists(DATA_FILE):
+    # If /tmp/goals.json doesn't exist, try to copy from local goals.json or start empty
+    if not os.path.exists(DATA_FILE):
+        if os.path.exists(INITIAL_FILE):
+            try:
+                shutil.copy(INITIAL_FILE, DATA_FILE)
+            except Exception as e:
+                print(f"Error copying initial file: {e}")
+                return []
+        else:
+            return []
+            
+    try:
         with open(DATA_FILE, "r") as f:
             return json.load(f)
-    return []
+    except Exception as e:
+        print(f"Error loading goals: {e}")
+        return []
 
 def save_goals(goals):
-    with open(DATA_FILE, "w") as f:
-        json.dump(goals, f, indent=4)
+    try:
+        with open(DATA_FILE, "w") as f:
+            json.dump(goals, f, indent=4)
+    except Exception as e:
+        print(f"Error saving goals: {e}")
 
 # Load initial goals
 goals = load_goals()
