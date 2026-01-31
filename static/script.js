@@ -130,7 +130,8 @@ function closeUpiModal() {
 }
 
 function payCustomUPI(index) {
-  const input = document.getElementById(`custom-amount-${index}`);
+  // Updated ID to match HTML change
+  const input = document.getElementById(`input-amount-${index}`);
   let amount = 100; // Default fallback if empty
 
   if (input && input.value) {

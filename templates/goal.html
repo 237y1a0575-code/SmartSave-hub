@@ -143,7 +143,7 @@
                     </div>
 
                     <div class="custom-save-container">
-                        <input type="number" id="custom-amount-{{ loop.index0 }}" class="custom-save-input"
+                        <input type="number" id="input-amount-{{ loop.index0 }}" class="custom-save-input"
                             placeholder="Enter amount"
                             onkeypress="if(event.key==='Enter') addCustomMoney({{ loop.index0 }})">
                         <button class="btn-save" onclick="addCustomMoney({{ loop.index0 }})">Save</button>
