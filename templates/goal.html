@@ -125,12 +125,22 @@
                         <h3 class="goal-name">{{ g.name }}</h3>
 
                         <div class="progress-container">
-                            <div class="progress-labels">
+                            {% set p_cls = 'low' %}
+                            {% if g.percent >= 100 %}{% set p_cls = 'complete' %}
+                            {% elif g.percent >= 75 %}{% set p_cls = 'high' %}
+                            {% elif g.percent >= 40 %}{% set p_cls = 'medium' %}
+                            {% endif %}
+
+                            <div class="progress-labels" style="align-items: center;">
                                 <span>₹{{ g.saved }}</span>
-                                <span>of ₹{{ g.target }}</span>
+                                <span class="percent-badge">{{ g.percent }}%</span>
                             </div>
+                            <div
+                                style="font-size: 0.75rem; color: var(--text-muted); text-align: right; margin-bottom: 4px;">
+                                of ₹{{ g.target }}</div>
+
                             <div class="progress-track">
-                                <div class="progress-fill" style="width: {{ g.percent }}%;"></div>
+                                <div class="progress-fill {{ p_cls }}" style="width: {{ g.percent }}%;"></div>
                             </div>
                             <div class="nudge-text">{{ g.nudge }}</div>
                             <div class="advisor-text">⏱️ {{ g.projection }}</div>

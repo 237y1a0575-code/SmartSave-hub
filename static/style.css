@@ -912,3 +912,43 @@ input:focus {
     padding: 2rem;
   }
 }
+
+/* --- NEW VISUAL UPDATES --- */
+
+/* Smooth Animated Progress Bars override */
+.progress-fill {
+  transition: width 1.2s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.5s ease;
+}
+
+/* Color Levels */
+.progress-fill.low {
+  background: linear-gradient(90deg, #ef4444 0%, #f87171 100%);
+  box-shadow: 0 2px 10px rgba(239, 68, 68, 0.3);
+}
+
+.progress-fill.medium {
+  background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
+  box-shadow: 0 2px 10px rgba(245, 158, 11, 0.3);
+}
+
+.progress-fill.high {
+  background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);
+  box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
+}
+
+.progress-fill.complete {
+  background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4);
+}
+
+/* Percentage Indicator */
+.percent-badge {
+  background: #f1f5f9;
+  color: var(--text-main);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  display: inline-block;
+  margin-left: auto;
+}
