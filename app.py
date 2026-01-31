@@ -25,8 +25,16 @@ google = oauth.register(
 )
 
 # Vercel Data Persistence
-# Use /tmp for writable storage in serverless env
-DATA_FILE = os.path.join("/tmp", "goals.json")
+# Vercel filesystem is read-only except for /tmp
+# We must use /tmp to save data in production (Linux)
+# But on Windows (Local), /tmp doesn't exist
+import platform
+
+if platform.system() == "Windows":
+    DATA_FILE = "goals.json" # Local file for Windows dev
+else:
+    DATA_FILE = os.path.join("/tmp", "goals.json") # Vercel/Linux
+
 INITIAL_FILE = "goals.json"
 
 def load_goals():
