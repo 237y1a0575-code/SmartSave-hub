@@ -952,3 +952,18 @@ input:focus {
   display: inline-block;
   margin-left: auto;
 }
+/* Streak Banner */
+.streak-banner {
+  background: linear-gradient(135deg, #ffedd5 0%, #fff7ed 100%);
+  border: 1px solid #ffcc80;
+  color: #c2410c;
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius-lg);
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: var(--shadow-sm);
+  animation: slideDown 0.6s ease-out;
+}
+

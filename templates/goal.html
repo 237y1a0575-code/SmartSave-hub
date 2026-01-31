@@ -63,6 +63,17 @@
                     </div>
             </div>
             <div class="dashboard-content">
+                {% if streak and streak > 0 %}
+                <div class="streak-banner">
+                    <div style="font-size: 1.8rem; animation: pulse 1.5s infinite;">🔥</div>
+                    <div>
+                        <div style="font-weight: 800; font-size: 1.1rem; color: #9a3412;">{{ streak }} Day Streak!</div>
+                        <div style="font-size: 0.9rem; color: #c2410c;">You're building financial freedom, one day at a
+                            time!</div>
+                    </div>
+                </div>
+                {% endif %}
+
                 {% if goals %}
                 <!-- Summary Stats -->
                 <div class="summary-grid">

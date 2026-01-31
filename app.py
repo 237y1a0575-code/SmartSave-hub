@@ -186,12 +186,14 @@ def get_smart_nudge(saved, target):
     if target == 0: return "Start saving!"
     percent = (saved / target) * 100
     
-    if percent >= 100: return "Goal completed! 🎉 Incredible job!"
-    if percent >= 90: return "So close! Almost there! 🚀"
-    if percent >= 50: return "Halfway there! You're crushing it! 🔥"
-    if percent >= 25: return "Great start! Keep this momentum! 💪"
-    if percent > 0: return "Every rupee counts! Keep going! 🌱"
-    return "Just getting started! 🌟"
+    if percent >= 100: return "🏆 Goal Reached! meaningful step forward!"
+    if percent >= 90: return "Final stretch! You are unstoppable! 🚀"
+    if percent >= 75: return "Incredible! 3/4 done. Finish strong! 💎"
+    if percent >= 50: return "Halfway mark passed! You're crushing it! 🔥"
+    if percent >= 25: return "25% secured! The habit is building. 🏗️"
+    if percent >= 10: return "Double digits! Nice momentum. 🌊"
+    if percent > 0: return "Every rupee counts! Small steps matter. 🌱"
+    return "The best time to start is now! 🌟"
 
 # --- ROUTES ---
 
