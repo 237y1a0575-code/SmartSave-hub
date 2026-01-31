@@ -7,6 +7,7 @@
     <title>Dashboard - SmartSave Hub</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 </head>
 
 <body>
@@ -138,7 +139,7 @@
                         {% if g.saved < g.target %} <div class="action-grid">
                             <button class="btn-micro" onclick="addMoney({{ loop.index0 }}, 10)">+₹10</button>
                             <button class="btn-micro" onclick="addMoney({{ loop.index0 }}, 50)">+₹50</button>
-                            <button class="btn-upi" onclick="payUPI({{ loop.index0 }}, 1)">Pay UPI</button>
+                            <button class="btn-upi" onclick="payCustomUPI({{ loop.index0 }})">Pay UPI</button>
                     </div>
 
                     <div class="custom-save-container">
@@ -146,6 +147,8 @@
                             placeholder="Enter amount"
                             onkeypress="if(event.key==='Enter') addCustomMoney({{ loop.index0 }})">
                         <button class="btn-save" onclick="addCustomMoney({{ loop.index0 }})">Save</button>
+                        <button class="btn-save" style="background:#6366f1; margin-left:0.5rem;"
+                            onclick="payCustomUPI({{ loop.index0 }})" title="Pay via UPI">📷</button>
                     </div>
                     {% else %}
                     <div
