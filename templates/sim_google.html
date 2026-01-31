@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sign in with Google</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', arial, sans-serif;
+            background-color: #202124;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+        }
+
+        .login-box {
+            background-color: #2d2e31;
+            width: 450px;
+            padding: 48px 40px 36px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+        }
+
+        .google-logo {
+            width: 48px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 8px;
+        }
+
+        p {
+            color: #bdc1c6;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .account-selector {
+            border: 1px solid #5f6368;
+            border-radius: 4px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-align: left;
+            margin-bottom: 40px;
+        }
+
+        .account-selector:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            background-color: #8ab4f8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #202124;
+            font-weight: bold;
+        }
+
+        .acc-info b {
+            display: block;
+            color: white;
+        }
+
+        .acc-info span {
+            font-size: 14px;
+            color: #9aa0a6;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #9aa0a6;
+            margin-top: 20px;
+        }
+
+        form {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-box">
+        <img src="https://img.icons8.com/color/48/000000/google-logo.png" alt="Google" class="google-logo">
+        <h1>Sign in with Google</h1>
+        <p>Choose an account to continue to MicroSave</p>
+
+        <form action="/sim-authorize" method="POST">
+            <button type="submit"
+                style="background:none; border:none; padding:0; width:100%; font:inherit; cursor:pointer; color:inherit;">
+                <div class="account-selector">
+                    <div class="avatar">L</div>
+                    <div class="acc-info">
+                        <b>Lokesh King</b>
+                        <span>lokeshking616@gmail.com</span>
+                    </div>
+                </div>
+            </button>
+        </form>
+
+        <div class="footer">
+            <span>English (United States)</span>
+            <div>
+                <span style="margin-right:15px">Help</span>
+                <span style="margin-right:15px">Privacy</span>
+                <span>Terms</span>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - SmartSave Hub</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <header class="navbar" id="main-nav">
+        <div class="container nav-container">
+            <div class="logo">
+                <span style="font-size: 1.5rem;">🚀</span> SmartSave Hub
+            </div>
+            <div class="nav-right">
+                {% if streak and streak > 0 %}
+                <div class="streak-badge">
+                    🔥 {{ streak }} Day Streak
+                </div>
+                {% endif %}
+                <div class="user-profile">
+                    <span style="font-size: 0.9rem; font-weight: 600; color: var(--text-main);">
+                        {% if user %}{{ user.name }}{% else %}Demo User{% endif %}
+                    </span>
+                    <div class="user-avatar">
+                        {% if user %}{{ user.name[0] }}{% else %}D{% endif %}
+                    </div>
+                </div>
+                <a href="/logout" class="btn btn-secondary"
+                    style="padding: 0.5rem 1rem; font-size: 0.85rem; border-radius: var(--radius-pill);">Log out</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Page Header -->
+        <!-- Motivation Banner -->
+        {% set total_saved = goals | map(attribute='saved') | sum %}
+        {% set total_target = goals | map(attribute='target') | sum %}
+        {% set overall_progress = (total_saved * 100) // total_target if total_target else 0 %}
+
+        <div class="motivation-banner">
+            <div class="motivation-icon">
+                {% if overall_progress < 25 %}🚀{% elif overall_progress < 50 %}💪{% elif overall_progress < 75 %}✨{%
+                    else %}🎉{% endif %} </div>
+                    <div class="motivation-text">
+                        {% if overall_progress < 25 %} <strong>Just getting started!</strong> You've saved ₹{{
+                            "{:,}".format(total_saved) }} — keep the momentum going!
+                            {% elif overall_progress < 50 %} <strong>Doing great!</strong> You're {{ overall_progress
+                                }}% there — every rupee counts!
+                                {% elif overall_progress < 75 %} <strong>Over halfway!</strong> ₹{{
+                                    "{:,}".format(total_saved) }} saved — you're crushing it!
+                                    {% elif overall_progress < 100 %} <strong>So close!</strong> Just ₹{{
+                                        "{:,}".format(total_target - total_saved) }} away from your goals!
+                                        {% else %}
+                                        <strong>Amazing!</strong> All goals completed — time to dream bigger! 🌟
+                                        {% endif %}
+                    </div>
+            </div>
+            <div class="dashboard-content">
+                {% if goals %}
+                <!-- Summary Stats -->
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <div class="summary-label">Total Saved</div>
+                        <div class="summary-value">₹{{ "{:,}".format(total_saved) }}</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Active Goals</div>
+                        <div class="summary-value">{{ goals | length }}</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Completed</div>
+                        {% set ns = namespace(comp=0) %}
+                        {% for g in goals %}
+                        {% if g.saved >= g.target %}{% set ns.comp = ns.comp + 1 %}{% endif %}
+                        {% endfor %}
+                        <div class="summary-value">{{ ns.comp }}</div>
+                    </div>
+                </div>
+
+
+
+                <!-- Goals Grid -->
+                <div class="goals-grid">
+                    {% for g in goals %}
+                    <div class="goal-card {% if g.saved >= g.target %}completed{% endif %}" id="goal-{{ loop.index0 }}">
+                        <div class="goal-badge">
+                            {% if g.saved >= g.target %}
+                            COMPLETED
+                            {% else %}
+                            {% if g.deadline %}Due {{ g.deadline }}{% else %}No Deadline{% endif %}
+                            {% endif %}
+                        </div>
+
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div class="goal-icon">
+                                {% if g.icon %}
+                                {{ g.icon }}
+                                {% elif 'Laptop' in g.name or 'Mac' in g.name %}💻
+                                {% elif 'Phone' in g.name %}📱
+                                {% elif 'Trip' in g.name %}✈️
+                                {% elif 'Car' in g.name %}🚗
+                                {% elif 'Bike' in g.name %}🏍️
+                                {% elif 'Home' in g.name %}🏠
+                                {% elif 'Education' in g.name %}🎓
+                                {% elif 'Gift' in g.name %}🎁
+                                {% else %}💰{% endif %}
+                            </div>
+                            <button class="btn btn-secondary" onclick="deleteGoal({{ loop.index0 }})"
+                                style="padding: 0.4rem; color: #ef4444; border: none; box-shadow: none;">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                    </path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <h3 class="goal-name">{{ g.name }}</h3>
+
+                        <div class="progress-container">
+                            <div class="progress-labels">
+                                <span>₹{{ g.saved }}</span>
+                                <span>of ₹{{ g.target }}</span>
+                            </div>
+                            <div class="progress-track">
+                                <div class="progress-fill" style="width: {{ g.percent }}%;"></div>
+                            </div>
+                            <div class="nudge-text">{{ g.nudge }}</div>
+                            <div class="advisor-text">⏱️ {{ g.projection }}</div>
+                        </div>
+
+                        {% if g.saved < g.target %} <div class="action-grid">
+                            <button class="btn-micro" onclick="addMoney({{ loop.index0 }}, 10)">+₹10</button>
+                            <button class="btn-micro" onclick="addMoney({{ loop.index0 }}, 50)">+₹50</button>
+                            <button class="btn-upi" onclick="payUPI({{ loop.index0 }}, 1)">Pay UPI</button>
+                    </div>
+
+                    <div class="custom-save-container">
+                        <input type="number" id="custom-amount-{{ loop.index0 }}" class="custom-save-input"
+                            placeholder="Enter amount"
+                            onkeypress="if(event.key==='Enter') addCustomMoney({{ loop.index0 }})">
+                        <button class="btn-save" onclick="addCustomMoney({{ loop.index0 }})">Save</button>
+                    </div>
+                    {% else %}
+                    <div
+                        style="margin-top: 1rem; text-align: center; padding: 1rem; background: var(--success-light); color: var(--success); border-radius: var(--radius-md); font-weight: 700;">
+                        Goal Achieved! You did it! 🎉
+                    </div>
+                    {% endif %}
+
+                    {% if g.history %}
+                    <div class="history-section">
+                        <div
+                            style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-light); margin-bottom: 0.5rem;">
+                            Recent History</div>
+                        <div class="history-list">
+                            {% for txn in g.history[:3] %}
+                            <div class="history-item">
+                                <span>{{ txn.date }}</span>
+                                <span class="history-amount">+₹{{ txn.amount }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                </div>
+                {% endfor %}
+            </div>
+
+            {% else %}
+            <!-- Empty State -->
+            <div class="empty-state">
+                <div style="font-size: 4rem; margin-bottom: 1.5rem;">🌱</div>
+                <h2 style="font-size: 1.75rem; margin-bottom: 1rem;">No goals yet</h2>
+                <p style="margin-bottom: 2rem; max-width: 400px; margin-left: auto; margin-right: auto;">
+                    Every big dream starts with a small saving. Create your first goal to start your journey to
+                    financial freedom!
+                </p>
+                <button class="btn btn-primary" onclick="openModal()" style="padding: 1rem 2rem;">Start a New
+                    Goal</button>
+            </div>
+            {% endif %}
+
+            <!-- Floating Add Button -->
+            <button class="fab" onclick="openModal()" title="Start a new goal">+</button>
+    </main>
+
+    <!-- Create Goal Modal -->
+    <div id="modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="close-modal" onclick="closeModal()">×</div>
+            <h2 style="margin-bottom: 1.5rem;">Start a new goal</h2>
+            <form id="addGoalForm" method="POST" action="/add-goal">
+                <div style="margin-bottom: 1.25rem;">
+                    <label style="display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem;">What are
+                        you saving for?</label>
+                    <input type="text" name="name" placeholder="e.g. New Macbook, Europe Trip" required>
+                </div>
+                <div style="margin-bottom: 1.25rem;">
+                    <label style="display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem;">Choose an
+                        Icon</label>
+                    <select name="icon"
+                        style="width: 100%; padding: 0.8rem; border: 1px solid var(--border); border-radius: var(--radius-md); background: white;">
+                        <option value="💰">💰 Money / Generic</option>
+                        <option value="💻">💻 Gadget / Laptop</option>
+                        <option value="📱">📱 Phone</option>
+                        <option value="✈️">✈️ Travel / Trip</option>
+                        <option value="🚗">🚗 Car</option>
+                        <option value="🏍️">🏍️ Bike</option>
+                        <option value="🏠">🏠 Home</option>
+                        <option value="🎓">🎓 Education</option>
+                        <option value="🎁">🎁 Gift</option>
+                        <option value="💍">💍 Wedding</option>
+                    </select>
+                </div>
+                <div style="margin-bottom: 1.25rem;">
+                    <label style="display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem;">Goal
+                        Amount (₹)</label>
+                    <input type="number" name="target" placeholder="50000" required>
+                </div>
+                <div style="margin-bottom: 2rem;">
+                    <label style="display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem;">Target
+                        Date</label>
+                    <input type="date" name="deadline" required>
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()"
+                        style="flex: 1;">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="flex: 2;">Create Goal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- UPI Payment Modal -->
+    <div id="upiModal" class="modal-overlay">
+        <div class="modal-content" style="text-align: center; max-width: 400px;">
+            <div class="close-modal" onclick="closeUpiModal()">×</div>
+            <h2 style="margin-bottom: 0.5rem;">Pay via UPI</h2>
+            <p style="margin-bottom: 2rem;">Scan QR or pay using any UPI app</p>
+
+            <div class="qr-container"
+                style="background: white; padding: 1rem; border-radius: var(--radius-lg); border: 2px solid var(--border); display: inline-block; margin-bottom: 1.5rem;">
+                <div class="qr-code-sim" id="qrCode"
+                    style="display: grid; grid-template-columns: repeat(12, 1fr); gap: 2px; width: 144px; height: 144px;">
+                    <!-- JS fills this -->
+                </div>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.25rem;">Amount to Pay</p>
+                <div style="font-size: 2.5rem; font-weight: 800; color: var(--text-main);" id="upiAmount">₹10</div>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">to
+                    <strong>loki1@okaxis</strong>
+                </p>
+            </div>
+
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn btn-secondary" onclick="closeUpiModal()" style="flex: 1;">Cancel</button>
+                <button class="btn btn-primary" id="confirmPayBtn" style="flex: 2;">Confirm Payment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- General Confirmation Modal (for Custom Amount) -->
+    <div id="confirmModal" class="modal-overlay">
+        <div class="modal-content" style="text-align: center; max-width: 350px;">
+            <div class="close-modal" onclick="closeConfirmModal()">×</div>
+            <h2 style="margin-bottom: 1rem; font-size: 1.25rem;">Confirm Transaction</h2>
+            <div style="margin-bottom: 1.5rem; font-size: 1.1rem;">
+                Confirm payment of <strong id="confirmAmountDisplay" style="color: var(--primary);">₹0</strong>?
+            </div>
+
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn btn-secondary" onclick="closeConfirmModal()" style="flex: 1;">Cancel</button>
+                <button class="btn btn-primary" id="finalConfirmBtn" style="flex: 1;">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container"
+        style="position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 2000; display: flex; flex-direction: column; gap: 10px; pointer-events: none;">
+        <style>
+            .toast {
+                background: rgba(30, 41, 59, 0.9);
+                color: white;
+                padding: 12px 24px;
+                border-radius: 50px;
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+                font-weight: 500;
+                font-size: 0.95rem;
+                pointer-events: auto;
+                animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+
+            @keyframes toastIn {
+                from {
+                    transform: translateY(20px);
+                    opacity: 0;
+                }
+
+                to {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+        </style>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        // Init logic for confetti & navbar
+        window.addEventListener('load', () => {
+            {% if goals %}
+            {% for g in goals %}
+            {% if g.saved >= g.target %}
+            if (localStorage.getItem('just_completed') === '{{ g.name }}') {
+                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+                localStorage.removeItem('just_completed');
+            }
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+
+            const pendingToast = localStorage.getItem('pendingToast');
+            if (pendingToast) { showToast(pendingToast); localStorage.removeItem('pendingToast'); }
+        });
+
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('main-nav');
+            if (window.scrollY > 20) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+    </script>
+
+    <!-- Floating Action Button for New Goal -->
+    <button class="fab" onclick="openModal()" title="Create New Goal">
+        +
+    </button>
+</body>
+
+</html>

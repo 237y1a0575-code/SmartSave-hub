@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign in - SmartSave Hub</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+  <div class="login-wrapper">
+    <div class="login-card">
+      <div style="font-size: 3rem; margin-bottom: 16px;">🚀</div>
+
+      <h1 class="login-title">Welcome back</h1>
+      <p class="login-subtitle">Let's get back to your savings goals.</p>
+
+      <div class="login-input-group">
+        <label>Email or Phone</label>
+        <input id="loginValue" type="text" placeholder="name@email.com" autocomplete="off">
+      </div>
+
+      <button onclick="sendOTP()" class="btn btn-primary login-btn">
+        Send Access Code
+      </button>
+
+      <div class="login-input-group">
+        <label>Access Code</label>
+        <input id="otp" type="text" placeholder="Enter 6-digit code" autocomplete="off">
+      </div>
+
+      <button onclick="verifyOTP()" class="btn btn-primary login-btn">
+        Continue to Dashboard
+      </button>
+
+      <div class="login-divider">
+        <span></span>
+        or
+        <span></span>
+      </div>
+
+      <button class="btn btn-secondary login-google-btn" onclick="googleLogin()">
+        <img src="https://img.icons8.com/color/24/000000/google-logo.png" alt="Google">
+        Sign in with Google
+      </button>
+
+      <div class="login-footer">
+        <p>
+          Demo Access Code: <span>123456</span>
+        </p>
+        <p style="margin-top: 8px; font-size: 0.7rem; color: var(--text-muted); font-weight: normal;">
+          <span style="font-size: 1rem; vertical-align: middle;">🛡️</span> Your data is securely stored using encrypted
+          sessions.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>

@@ -1,0 +1,197 @@
+/* PREMIUM DARK LOGIN (Vercel/CoinJar style) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --primary: #38bdf8;
+    --primary-light: rgba(56, 189, 248, 0.1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body.login-screen {
+    background-color: #030712;
+    background-image:
+        linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+    background-position: center center;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    animation: bgMove 120s linear infinite;
+    font-family: 'Inter', sans-serif;
+}
+
+@keyframes bgMove {
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: 600px 600px;
+    }
+}
+
+body.login-screen::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(56, 189, 248, 0.1) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.login-card {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 48px;
+    border-radius: 32px;
+    width: 100%;
+    max-width: 440px;
+    text-align: center;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 40px rgba(56, 189, 248, 0.05);
+    z-index: 10;
+    animation: cardEnter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    color: white;
+}
+
+@keyframes cardEnter {
+    from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.login-card h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.04em;
+    margin-bottom: 12px;
+}
+
+.login-card p {
+    color: #94a3b8;
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin-bottom: 32px;
+}
+
+.login-container {
+    width: 100%;
+    margin-top: 0;
+}
+
+.input-group {
+    text-align: left;
+    margin-bottom: 24px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #64748b;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.login-screen input {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    padding: 16px 20px;
+    width: 100%;
+    border-radius: 14px;
+    font-size: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    outline: none;
+}
+
+.login-screen input:focus {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 5px rgba(56, 189, 248, 0.15);
+    transform: scale(1.01);
+}
+
+.btn-primary {
+    background: #ffffff;
+    color: #020617;
+    font-weight: 700;
+    width: 100%;
+    padding: 16px;
+    border-radius: 14px;
+    font-size: 1rem;
+    margin-bottom: 16px;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
+    display: block;
+}
+
+.btn-primary:hover {
+    background: #f1f5f9;
+    box-shadow: 0 0 30px rgba(56, 189, 248, 0.3);
+    transform: translateY(-2px) scale(1.02);
+}
+
+.divider {
+    color: #475569;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin: 32px 0;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.google-btn-dark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    padding: 14px;
+    border-radius: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.google-btn-dark:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
